@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Select from './components/Select';
+import ElectionResults from './components/ElectionResults';
+import axios from 'axios';
 
 function App() {
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState('');
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/cities').then((response) => {
+      setCities(response.data);
+    });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>React Elections</h1>
+      <Select cities={cities} onSelectCity={setSelectedCity} />
+      {selectedCity && <ElectionResults cityId={selectedCity} />}
     </div>
   );
 }
